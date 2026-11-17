@@ -1,7 +1,7 @@
 # Session prompts — "Better Vibes" deck
 
 Verbatim prompts given to the coding agent during the creation and iteration of
-`presentation-design.html` (later moved to `better-vibes/presentation-design.html`).
+the deck (now `better-presentation-vibes/presentation.html`).
 
 ---
 
@@ -172,3 +172,47 @@ Verbatim prompts given to the coding agent during the creation and iteration of
 ## 30. Export + skill
 
 > I'd like my prompts in this session exported as an MD file. Can you also distill a skill from this session, writing up design principles that I talk about and that I made?
+
+## 31. Copy the skill into the project
+
+> Write this skill out to the better-vibes directory
+
+## 32. Remove the installed skill
+
+> delete the skill from this agent's directory, I don't want it to stick around
+
+## 33. Project moved and renamed
+
+> i've moved the project into better-presentation-vibes
+
+## 34. QR code slide (first attempt)
+
+> Add one more slide at the end, no text, use qr-code.png that's in the same directory
+
+## 35. QR code slide, centered
+
+> I've made more edits to the presentation, and I'd like one last slide added. Put qr-code.png centered on that last slide
+
+## 36. Transparent QR background
+
+> Can you edit that qr code png to have a transparent background?
+
+## 37. Manual edits round 4
+
+> I've made a few more text edits
+
+## 38. Deck title in the footer
+
+> Add the title of the presentation on every slide after the pagination, use that size text
+
+## 39. Footer title in caps
+
+> Make that all caps down there
+
+## 40. QR slide becomes a two-up closer
+
+> On the QR code slide, move the QR code to the left half and label it "skill". On the right half, link to session-prompts.md and label it "session"
+
+## 41. This update
+
+> update session-prompts.md to include all of the prompts that have happened since I created that file

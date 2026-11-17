@@ -95,6 +95,17 @@
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
   }
+  .slide-label {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .doc-link { text-decoration: none; }
+  .doc-link .wireframe { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  .doc-link:hover .wireframe { border-color: var(--accent); box-shadow: 0 24px 60px rgba(79, 70, 229, 0.14); }
+
   .deck-title {
     font-size: 13px;
     font-weight: 500;
@@ -672,8 +683,27 @@
 
 <!-- 12 · QR -->
 <section class="slide">
-  <img src="./qr-code.png" alt="QR code"
-       style="height:56vmin;width:56vmin;object-fit:contain;align-self:center">
+  <div style="display:grid;grid-template-columns:1fr 1fr;width:100%;align-items:center;justify-items:center">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:28px">
+      <img src="./qr-code.png" alt="QR code linking to the presentation-design skill"
+           style="height:44vmin;width:44vmin;object-fit:contain">
+      <span class="slide-label">Skill</span>
+    </div>
+    <a class="doc-link" href="./session-prompts.md"
+       style="display:flex;flex-direction:column;align-items:center;gap:28px">
+      <div class="wireframe" style="width:32vmin;height:40vmin;padding:24px;display:flex;flex-direction:column">
+        <div class="wire-line" style="margin-top:0;height:14px;width:62%;background:#d8d5cd"></div>
+        <div class="wire-line" style="height:9px"></div>
+        <div class="wire-line" style="width:88%;height:9px"></div>
+        <div class="wire-line" style="width:74%;height:9px"></div>
+        <div class="wire-line" style="width:92%;height:9px"></div>
+        <div class="wire-line" style="width:58%;height:9px"></div>
+        <div class="wire-line" style="width:84%;height:9px"></div>
+        <div class="wire-line" style="width:70%;height:9px"></div>
+      </div>
+      <span class="slide-label">Session prompts</span>
+    </a>
+  </div>
 </section>
 
 <script>
