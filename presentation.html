@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better Vibes: Care &amp; Craft in your Presentation Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16181d;
+    --ink-soft: #565b66;
+    --ink-faint: #9aa0ab;
+    --paper: #faf9f6;
+    --accent: #4f46e5;
+    --warm: #e05e33;
+    --line: #e4e2dc;
+    --blob-a: rgba(79, 70, 229, 0.16);
+    --blob-b: rgba(224, 94, 51, 0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- ambient accent element ---------- */
+  .blob {
+    position: fixed;
+    top: 0; left: 0;
+    width: 68vmax; height: 68vmax;
+    pointer-events: none;
+    z-index: 0;
+    transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .blob::before, .blob::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+  .blob::before {
+    inset: 0;
+    background: radial-gradient(circle at 35% 35%, var(--blob-a), transparent 62%);
+    filter: blur(30px);
+  }
+  .blob::after {
+    inset: 14%;
+    background: radial-gradient(circle at 60% 60%, var(--blob-b), transparent 58%);
+    filter: blur(40px);
+  }
+  .blob-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 46vmin; height: 46vmin;
+    border: 1.5px solid rgba(22, 24, 29, 0.06);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  /* ---------- deck chrome ---------- */
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 50;
+  }
+
+  .pager {
+    position: fixed;
+    bottom: 28px; left: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    z-index: 50;
+  }
+
+  .hint {
+    position: fixed;
+    bottom: 28px; right: 40px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    z-index: 50;
+    opacity: 0.75;
+  }
+  .hint kbd {
+    font-family: inherit;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 11px;
+  }
+
+  .section-tag {
+    position: absolute;
+    top: 48px; left: 88px;
+    font-size: clamp(40px, 5.6vw, 76px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  /* ---------- slides ---------- */
+  .slide {
+    position: fixed;
+    inset: 0;
+    padding: 72px 88px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.55s;
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.leaving {
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(-18px);
+  }
+
+  .kicker {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+  }
+
+  h1 {
+    font-size: clamp(56px, 9.5vw, 128px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    max-width: 14ch;
+  }
+  h2 {
+    font-size: clamp(40px, 5.6vw, 76px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: 20ch;
+    margin-bottom: 40px;
+  }
+  .lede {
+    font-size: clamp(20px, 2.1vw, 28px);
+    font-weight: 400;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    max-width: 34em;
+    margin-top: 28px;
+  }
+  .accent { color: var(--accent); }
+  .warm { color: var(--warm); }
+
+  /* big list (title slide agenda / "good news") */
+  .biglist {
+    list-style: none;
+    margin-top: 14px;
+  }
+  .biglist li {
+    font-size: clamp(26px, 3.4vw, 48px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.28;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 28px;
+    max-width: 26em;
+  }
+  .biglist li:last-child { border-bottom: none; }
+  .biglist .num {
+    font-size: 0.5em;
+    font-weight: 700;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    min-width: 1.6em;
+  }
+  .biglist .soft { color: var(--ink-soft); font-weight: 500; }
+
+  /* statement trio */
+  .stack { display: flex; flex-direction: column; gap: 44px; max-width: 45vw; }
+  .stack .point { font-size: clamp(24px, 3vw, 42px); font-weight: 650; letter-spacing: -0.02em; line-height: 1.25; }
+  .stack .point small {
+    display: block;
+    font-size: 0.52em;
+    font-weight: 450;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    letter-spacing: 0;
+  }
+
+  .footnote {
+    margin-top: 48px;
+    font-size: 15px;
+    color: var(--ink-faint);
+    max-width: 60ch;
+    line-height: 1.5;
+  }
+  .footnote a { color: var(--ink-soft); }
+
+  /* two-column split */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .split h2 { margin-bottom: 28px; }
+
+  /* demo panels on the antipattern slides */
+  .demo {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(22, 24, 29, 0.06);
+    font-size: 17px;
+  }
+  .demo .demo-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 22px;
+  }
+
+  /* the "one list, five signals" mock */
+  .overkill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1.5px solid #c7b9f5;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .overkill-item .n {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .overkill-item .dot { color: var(--ink-soft); }
+
+  /* pseudonav wireframe */
+  .wireframe {
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    padding: 24px 28px;
+    box-shadow: 0 24px 60px rgba(22, 24, 29, 0.08);
+    max-width: 460px;
+  }
+  .wire-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  .wire-box {
+    height: 14px;
+    width: 40px;
+    border-radius: 7px;
+    background: #d8d5cd;
+    flex-shrink: 0;
+  }
+  .wire-box.logo { width: 22px; border-radius: 5px; }
+  .wire-box.pseudo { flex: 1; background: var(--warm); }
+  .wire-line {
+    height: 11px;
+    border-radius: 5px;
+    background: var(--line);
+    margin-top: 18px;
+  }
+
+  /* icon + text alignment demo */
+  .icon-demo { display: flex; flex-direction: column; gap: 18px; margin-top: 26px; }
+  .icon-row { display: flex; align-items: center; gap: 16px; }
+  .icon-row.top { align-items: flex-start; }
+  .icon-row.top .icon-chip { margin-top: 5px; }
+  .icon-chip {
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .icon-label { font-size: 20px; font-weight: 700; line-height: 1.3; }
+  .icon-verdict { font-size: 14px; font-weight: 700; margin-top: 3px; letter-spacing: 0.02em; }
+  .icon-verdict.bad { color: var(--warm); }
+  .icon-verdict.good { color: var(--accent); }
+
+  /* tiny text demo */
+  .tiny { font-size: 11px; color: var(--ink-soft); line-height: 1.5; }
+  .overlap-demo { position: relative; height: 130px; }
+  .overlap-demo span {
+    position: absolute;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ================= THE FAMILIAR-LAYOUTS SLIDE ================= */
+  /* Deliberately styled like "classic AI-generated content."        */
+  .claude-slide {
+    background: #f7f5f0;
+    color: #29261b;
+    padding: 64px 88px;
+    overflow: hidden;
+  }
+  .claude-gradient {
+    font-size: clamp(34px, 4.4vw, 58px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #6d5bd0, #b8558a 55%, #d97b4a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .claude-sub {
+    font-size: 18px;
+    color: #6b6557;
+    margin-bottom: 36px;
+  }
+  .claude-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .claude-card {
+    background: #ffffff;
+    border: 1px solid #e3ddd0;
+    border-left: 4px solid #8b7fd4;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 4px 14px rgba(60, 50, 90, 0.06);
+  }
+  .claude-card:nth-child(2) { border-left-color: #d97b4a; }
+  .claude-card:nth-child(3) { border-left-color: #4a9d9c; }
+  .claude-card:nth-child(4) { border-left-color: #c95d82; }
+  .claude-card:nth-child(5) { border-left-color: #6a9955; }
+  .claude-card:nth-child(6) { border-left-color: #b8912f; }
+  .claude-card .icon { font-size: 26px; margin-bottom: 12px; }
+  .claude-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #3d3830;
+  }
+  .claude-card p { font-size: 13.5px; line-height: 1.5; color: #6b6557; }
+  .claude-badge {
+    position: absolute;
+    top: 40px; right: 48px;
+    background: linear-gradient(90deg, #6d5bd0, #b8558a);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .clean-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 44px 72px;
+  }
+  .clean-card h3 {
+    font-size: clamp(30px, 3.4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .clean-card p {
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+
+  .cleaner-cards {
+    display: grid;
+    gap: 44px 72px;
+  }
+
+  .claude-tag {
+    position: absolute;
+    bottom: 34px; right: 48px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    max-width: 30ch;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* closing */
+  .closing-check {
+    display: flex; flex-direction: column; gap: 30px; margin-top: 20px; max-width: 50em;
+  }
+  .closing-check .item {
+    display: flex; gap: 20px; align-items: baseline;
+    font-size: clamp(22px, 2.6vw, 36px);
+    font-weight: 650; letter-spacing: -0.02em; line-height: 1.25;
+  }
+  .closing-check .check { color: var(--accent); font-weight: 800; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob, .blob-ring, .slide, .progress { transition: none !important; }
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 48px 36px; }
+    .split { grid-template-columns: 1fr; gap: 32px; }
+    .claude-cards { grid-template-columns: 1fr 1fr; }
+    .claude-slide { padding: 48px 36px; }
+    .claude-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob" id="blob"></div>
+<div class="blob-ring" id="blobRing"></div>
+<div class="progress" id="progress"></div>
+<div class="pager" id="pager">1 / 17</div>
+<div class="hint"><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> fullscreen</div>
+
+<!-- 1 · TITLE -->
+<section class="slide">
+  <div class="kicker">A talk about talks</div>
+  <h1>Better Vibes</h1>
+  <p style="font-size:clamp(30px,4vw,54px);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-top:24px;white-space:nowrap">Care &amp; Craft in your Presentation Design</p>
+</section>
+
+<!-- 2 · THE GOOD NEWS -->
+<section class="slide">
+  <ol class="biglist">
+    <li><span class="num">01</span>You don't have to be a designer</li>
+    <li><span class="num">02</span><span class="soft">You don't need an awesome in-house slide template</span></li>
+    <li><span class="num">03</span>You can use AI</li>
+    <li><span class="num">04</span><span class="soft">Think of this as a <span class="accent" style="font-weight:700">visual test harness</span></span></li>
+  </ol>
+</section>
+
+<!-- 3 · WHY CARE -->
+<section class="slide">
+  <h2>Why should you care?</h2>
+  <p style="font-size:clamp(28px,3.4vw,48px);font-weight:650;letter-spacing:-0.02em;line-height:1.25;max-width:22em"><span class="accent">Virtue signaling is good, actually.</span></p>
+</section>
+
+<section class="slide">
+  <p style="font-size:clamp(24px,3vw,44px);font-weight:650;letter-spacing:-0.02em;line-height:1.25;max-width:22em">Don't undermine the good impression others already have of you.</p>
+</section>
+
+<section class="slide">
+  <p style="font-size:clamp(24px,3vw,44px);font-weight:650;letter-spacing:-0.02em;line-height:1.25;max-width:22em">Nothing on your slides<br /> should distract from the message.</p>
+</section>
+
+<!-- 4 · BACKGROUND -->
+<section class="slide">
+  <h2>Good design advice is already <span class="accent">in the weights</span>.</h2>
+  <div class="split" style="grid-template-columns:repeat(3,1fr)">
+    <div>
+      <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;margin-bottom:8px">CRAP principles</div>
+      <p style="color:var(--ink-soft);font-size:18px;line-height:1.55">Contrast · Repetition · Alignment · Proximity.<br>
+      <a href="https://designlab.wisc.edu/resources/design-tips-and-tricks/crap-principles/" style="color:var(--ink-soft)">designlab.wisc.edu</a></p>
+    </div>
+    <div>
+      <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;margin-bottom:8px">Presentation Zen</div>
+      <p style="color:var(--ink-soft);font-size:18px;line-height:1.55">Garr Reynolds. Restraint, simplicity, one idea per slide.</p>
+    </div>
+    <div>
+      <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;margin-bottom:8px">slide:ology</div>
+      <p style="color:var(--ink-soft);font-size:18px;line-height:1.55">Nancy Duarte. The craft of great decks — audience, message, visual story.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · FAMILIAR LAYOUTS (the intentionally AI-looking slide) -->
+<section class="slide claude-slide">
+  <div class="claude-badge">✨ Best Practices</div>
+  <div class="claude-gradient">Lorem Ipsum Dolor Sit Amet Consectetur</div>
+  <div class="claude-sub">Here are six key considerations to keep in mind:</div>
+  <div class="claude-cards">
+    <div class="claude-card"><div class="icon">🎯</div><h3>Lorem Ipsum Dolor</h3><p>Sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p></div>
+    <div class="claude-card"><div class="icon">⚡</div><h3>Consectetur Adipiscing</h3><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p></div>
+    <div class="claude-card"><div class="icon">✅</div><h3>Eiusmod Tempor</h3><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p></div>
+    <div class="claude-card"><div class="icon">📊</div><h3>Excepteur Sint</h3><p>Sunt in culpa qui officia deserunt mollit anim id est laborum sed do eiusmod tempor.</p></div>
+    <div class="claude-card"><div class="icon">🚀</div><h3>Fugiat Nulla Pariatur</h3><p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p></div>
+    <div class="claude-card"><div class="icon">💡</div><h3>Quis Nostrud Exercitation</h3><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.</p></div>
+  </div>
+  <div class="claude-tag">↑ this slide is doing the thing.<br>That's the point.</div>
+</section>
+
+<!-- 6b · SAME CONTENT, LESS DECORATION -->
+<section class="slide">
+  <h2 style="font-size:clamp(36px,4.8vw,64px);margin-bottom:100px">Lorem Ipsum Dolor Sit Amet Consectetur</h2>
+  <div class="clean-cards">
+    <div class="clean-card"><h3>Lorem Ipsum Dolor</h3><p>Sit amet, consectetur adipiscing elit.</p></div>
+    <div class="clean-card"><h3>Consectetur Adipiscing</h3><p>Ut enim ad minim veniam, quis nostrud.</p></div>
+    <div class="clean-card"><h3>Eiusmod Tempor</h3><p>Duis aute irure dolor in reprehenderit.</p></div>
+    <div class="clean-card"><h3>Excepteur Sint</h3><p>Sunt in culpa qui officia deserunt.</p></div>
+    <div class="clean-card"><h3>Fugiat Nulla Pariatur</h3><p>Excepteur sint occaecat cupidatat non proident.</p></div>
+    <div class="clean-card"><h3>Quis Nostrud Exercitation</h3><p>Consectetur adipisicing elit sed do eiusmod.</p></div>
+  </div>
+</section>
+
+
+<section class="slide">
+  <h1>Antipatterns</h1>
+</section>
+
+<!-- 5 · CLIP ART ROUND 2 -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <div class="split" style="align-items:center">
+    <div>
+      <h2>Images<br /> for the sake of images</h2>
+    </div>
+    <img src="./image-for-the-sake.jpg" alt="A decorative image added for its own sake"
+         style="width:100%;height:62vh;object-fit:cover;border-radius:20px;box-shadow:0 24px 60px rgba(22,24,29,0.12)">
+  </div>
+</section>
+
+<!-- 7 · SUBTLER ANTIPATTERNS -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <div class="split">
+    <div>
+      <h2>Redundant decoration</h2>
+    </div>
+    <div class="demo">
+      <div class="demo-label">One list · five signals</div>
+      <div class="overkill-item"><span class="dot">•</span><span class="n" style="background:#6d5bd0">1</span><span>🎯&nbsp; Plan the work</span></div>
+      <div class="overkill-item"><span class="dot">•</span><span class="n" style="background:#d97b4a">2</span><span>⚡&nbsp; Execute the work</span></div>
+      <div class="overkill-item"><span class="dot">•</span><span class="n" style="background:#4a9d9c">3</span><span>📊&nbsp; Measure results</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · NAVIGATION -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <div class="split" style="grid-template-columns:1.3fr 1fr;align-items:center">
+    <div>
+      <h2>"Navigation" that isn't</h2>
+    </div>
+    <div class="wireframe">
+      <div class="wire-nav">
+        <span class="wire-box logo"></span>
+        <span class="wire-box"></span>
+        <span class="wire-box"></span>
+        <span class="wire-box"></span>
+        <span class="wire-box pseudo"></span>
+      </div>
+      <div class="wire-line" style="width:72%"></div>
+      <div class="wire-line"></div>
+      <div class="wire-line" style="width:56%"></div>
+      <div class="wire-line" style="width:84%"></div>
+      <div class="wire-line" style="width:38%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · SMALL-PRINT ASIDE (deliberately showing the antipattern) -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <h2>Small-print asides</h2>
+  <div class="stack">
+    <div class="point">
+      <small>Your audience can't help themselves — the whisper pulls attention away from the headline.</small>
+    </div>
+    <div class="point">It signals you didn't finish the thought.
+      <small>If the qualifier matters, it belongs in the statement itself.</small>
+    </div>
+    <div class="point">It quietly drains hierarchy.
+      <small>When every statement ships with a caption, nothing reads as the headline anymore.</small>
+    </div>
+  </div>
+  <p class="footnote" style="margin-top:32px">(And yes — you just read these three slides exactly the way your audience would.)</p>
+</section>
+
+
+<!-- 9 · OLD MISTAKES -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <div class="split">
+    <div>
+      <h2 style="font-size:clamp(32px,4vw,52px);">Text too small</h2>
+      <p style="color:var(--ink-soft);font-size:clamp(20px,2.2vw,28px);line-height:1.5;margin-top:20px;font-weight:500">If someone in row 30 can't read it,<br /> it doesn't matter how clever it is.</p>
+    </div>
+    <div class="demo" style="align-self:center">
+      <div class="demo-label">Can you read this?</div>
+      <p class="tiny">Neither can the back row. Dense paragraphs, 11-point body text, and a figure crammed into the corner were bad in 2003 and they are bad now. Generative layouts happily reproduce them because nothing in the prompt said "legible from 20 meters." The old rules never stopped being rules — the new tools just make it easier to violate them at scale.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · SMALLER COMMON MISTAKES -->
+<section class="slide">
+  <div class="section-tag">Antipatterns</div>
+  <div class="split">
+    <div>
+      <h2 style="font-size:clamp(32px,4vw,52px)">Text overlap.</h2>
+
+      <div class="demo overlap-demo" style="margin-top:28px;padding:20px">
+        <span style="top:24px;left:24px">Creeps in when a design is generated on a fixed grid, then the text is edited later.</span>
+        <span style="top:70px;left:24px;color:var(--warm)">Oh no, not again!</span>
+      </div>
+    </div>
+    <div>
+      <h2 style="font-size:clamp(32px,4vw,52px)">Icon misalignment.</h2>
+
+      <div class="icon-demo">
+        <div class="icon-row">
+          <span class="icon-chip"></span>
+          <div>
+            <div class="icon-label">Two-line label that wraps<br>onto a second line of text</div>
+            <div class="icon-verdict bad">✗ block-centered — floats between lines</div>
+          </div>
+        </div>
+        <div class="icon-row top">
+          <span class="icon-chip"></span>
+          <div>
+            <div class="icon-label">Two-line label that wraps<br>onto a second line of text</div>
+            <div class="icon-verdict good">✓ multi-line: top-aligned with the icon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · CLOSING -->
+<section class="slide">
+  <h2>All of it is fixable <span class="accent">by you</span>.</h2>
+</section>
+
+<section class="slide">
+  <h1 style="margin-bottom: 72px">Show that you care</h1>
+  <h1 style="font-size: 72px; max-width: 100em"><span class="accent">And your audience will respond</span></h1>
+</section>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const blob = document.getElementById("blob");
+  const ring = document.getElementById("blobRing");
+  const progress = document.getElementById("progress");
+  const pager = document.getElementById("pager");
+
+  // Pseudo-random but deterministic resting poses for the ambient accent,
+  // one per slide — it glides to a new position on every transition.
+  const poses = [
+    { x: 18, y: -22, s: 1.15, r: 0 },
+    { x: 52, y: -8,  s: 0.9,  r: 40 },
+    { x: -14, y: 26, s: 1.05, r: 85 },
+    { x: 40, y: 30,  s: 1.2,  r: 130 },
+    { x: 60, y: -30, s: 0.85, r: 175 },
+    { x: -20, y: -18, s: 1.1, r: 220 },
+    { x: 30, y: 18,  s: 0.95, r: 265 },
+    { x: 55, y: 34,  s: 1.15, r: 310 },
+    { x: 8,  y: -34, s: 1.0,  r: 355 },
+    { x: 46, y: 12,  s: 1.18, r: 400 },
+    { x: 22, y: 6,   s: 1.25, r: 445 },
+    { x: -16, y: 20, s: 0.9,  r: 490 },
+    { x: 50, y: -14, s: 1.05, r: 535 },
+    { x: 12, y: 28,  s: 1.1,  r: 580 },
+  ];
+
+  let current = 0;
+  let leaving = null;
+
+  function applyPose(i) {
+    const p = poses[i % poses.length];
+    blob.style.transform =
+      `translate(${p.x}vw, ${p.y}vh) rotate(${p.r}deg) scale(${p.s})`;
+    ring.style.transform =
+      `translate(${(p.x * -0.6) + 8}vw, ${(p.y * -0.6) + 10}vh) rotate(${-p.r}deg) scale(${p.s * 0.9})`;
+  }
+
+  function show(next) {
+    if (next === current || next < 0 || next >= slides.length) return;
+    const prev = slides[current];
+    if (leaving) leaving.classList.remove("leaving");
+    prev.classList.add("leaving");
+    leaving = prev;
+    setTimeout(() => { prev.classList.remove("leaving"); prev.classList.remove("active"); }, 600);
+    prev.classList.remove("active");
+
+    current = next;
+    const el = slides[current];
+    // force reflow so the enter transition always plays
+    void el.offsetWidth;
+    el.classList.add("active");
+
+    applyPose(current);
+    progress.style.width = (current / (slides.length - 1)) * 100 + "%";
+    pager.textContent = (current + 1) + " / " + slides.length;
+  }
+
+  const nextSlide = () => show(Math.min(current + 1, slides.length - 1));
+  const prevSlide = () => show(Math.max(current - 1, 0));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); nextSlide(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prevSlide(); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key.toLowerCase() === "f") {
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("a")) return;
+    (e.clientX > window.innerWidth / 2) ? nextSlide() : prevSlide();
+  });
+
+  let touchX = null;
+  document.addEventListener("touchstart", (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) (dx < 0 ? nextSlide() : prevSlide());
+    touchX = null;
+  }, { passive: true });
+
+  // init
+  slides[0].classList.add("active");
+  applyPose(0);
+  progress.style.width = "0%";
+  pager.textContent = "1 / " + slides.length;
+</script>
+</body>
+</html>
