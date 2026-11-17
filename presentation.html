@@ -80,15 +80,27 @@
     z-index: 50;
   }
 
-  .pager {
+  .pager-wrap {
     position: fixed;
     bottom: 28px; left: 40px;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    z-index: 50;
+  }
+  .pager {
     font-size: 13px;
     font-weight: 500;
     color: var(--ink-faint);
     letter-spacing: 0.06em;
     font-variant-numeric: tabular-nums;
-    z-index: 50;
+  }
+  .deck-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .hint {
@@ -449,7 +461,10 @@
 <div class="blob" id="blob"></div>
 <div class="blob-ring" id="blobRing"></div>
 <div class="progress" id="progress"></div>
-<div class="pager" id="pager">1 / 17</div>
+<div class="pager-wrap">
+  <span class="pager" id="pager">1 / 17</span>
+  <span class="deck-title">Better Vibes: Care &amp; Craft in your Presentation Design</span>
+</div>
 <div class="hint"><kbd>←</kbd> <kbd>→</kbd> or click · <kbd>F</kbd> fullscreen</div>
 
 <!-- 1 · TITLE -->
@@ -485,7 +500,7 @@
 
 <!-- 4 · BACKGROUND -->
 <section class="slide">
-  <h2>Good design advice is already <span class="accent">in the weights</span>.</h2>
+  <h2>Good design advice is already in the weights... <span class="accent">right?</span></h2>
   <div class="split" style="grid-template-columns:repeat(3,1fr)">
     <div>
       <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;margin-bottom:8px">CRAP principles</div>
@@ -517,19 +532,6 @@
     <div class="claude-card"><div class="icon">💡</div><h3>Quis Nostrud Exercitation</h3><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.</p></div>
   </div>
   <div class="claude-tag">↑ this slide is doing the thing.<br>That's the point.</div>
-</section>
-
-<!-- 6b · SAME CONTENT, LESS DECORATION -->
-<section class="slide">
-  <h2 style="font-size:clamp(36px,4.8vw,64px);margin-bottom:100px">Lorem Ipsum Dolor Sit Amet Consectetur</h2>
-  <div class="clean-cards">
-    <div class="clean-card"><h3>Lorem Ipsum Dolor</h3><p>Sit amet, consectetur adipiscing elit.</p></div>
-    <div class="clean-card"><h3>Consectetur Adipiscing</h3><p>Ut enim ad minim veniam, quis nostrud.</p></div>
-    <div class="clean-card"><h3>Eiusmod Tempor</h3><p>Duis aute irure dolor in reprehenderit.</p></div>
-    <div class="clean-card"><h3>Excepteur Sint</h3><p>Sunt in culpa qui officia deserunt.</p></div>
-    <div class="clean-card"><h3>Fugiat Nulla Pariatur</h3><p>Excepteur sint occaecat cupidatat non proident.</p></div>
-    <div class="clean-card"><h3>Quis Nostrud Exercitation</h3><p>Consectetur adipisicing elit sed do eiusmod.</p></div>
-  </div>
 </section>
 
 
@@ -595,7 +597,7 @@
   <h2>Small-print asides</h2>
   <div class="stack">
     <div class="point">
-      <small>Your audience can't help themselves — the whisper pulls attention away from the headline.</small>
+      <small>Whispering pulls attention away from the headline.</small>
     </div>
     <div class="point">It signals you didn't finish the thought.
       <small>If the qualifier matters, it belongs in the statement itself.</small>
@@ -628,7 +630,7 @@
   <div class="section-tag">Antipatterns</div>
   <div class="split">
     <div>
-      <h2 style="font-size:clamp(32px,4vw,52px)">Text overlap.</h2>
+      <h2 style="font-size:clamp(32px,4vw,52px)">Text overlap</h2>
 
       <div class="demo overlap-demo" style="margin-top:28px;padding:20px">
         <span style="top:24px;left:24px">Creeps in when a design is generated on a fixed grid, then the text is edited later.</span>
@@ -636,7 +638,7 @@
       </div>
     </div>
     <div>
-      <h2 style="font-size:clamp(32px,4vw,52px)">Icon misalignment.</h2>
+      <h2 style="font-size:clamp(32px,4vw,52px)">Icon misalignment</h2>
 
       <div class="icon-demo">
         <div class="icon-row">
@@ -666,6 +668,12 @@
 <section class="slide">
   <h1 style="margin-bottom: 72px">Show that you care</h1>
   <h1 style="font-size: 72px; max-width: 100em"><span class="accent">And your audience will respond</span></h1>
+</section>
+
+<!-- 12 · QR -->
+<section class="slide">
+  <img src="./qr-code.png" alt="QR code"
+       style="height:56vmin;width:56vmin;object-fit:contain;align-self:center">
 </section>
 
 <script>
